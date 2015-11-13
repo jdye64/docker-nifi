@@ -1,13 +1,9 @@
 
-# Introduction 
-
-Special thanks for Github user [trkurc](https://github.com/trkurc) for providing the 0.1.0 version
-
 Dockerfile to build a nifi container image
 
 ## Version
 
-Apache NiFi 0.2.1
+Apache NiFi 0.4.0-SNAPSHOT
 
 # Quick Start
 
@@ -18,16 +14,16 @@ This will open listening ports - ensure that your host OS has protections in pla
 You can launch the image using the docker command line
 
 ```bash
-docker run -d --name=nifi_021 \
+docker run -d --name=nifi_040 \
 -p 8080:8080 -p 8081:8081 \
 -v /tmp/output:/output \
-jdye64/nifi_021
+aperepel/nifi
 ```
 
 You can view the startup progress using docker logs command
 
 ```bash
-docker logs -f nifi_021
+docker logs -f nifi_040
 ```
 
 The application is started when you see a line similar to the one below:
