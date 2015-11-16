@@ -1,0 +1,5 @@
+nifi:
+  image: aperepel/nifi
+  ports:
+    - 9091:8080
+  
