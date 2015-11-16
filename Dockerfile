@@ -1,7 +1,7 @@
 FROM java:8-jdk
 MAINTAINER Andrew Grande
 
-ADD ./nifi-0.4.0-SNAPSHOT-bin.tar .
+ADD ./nifi-0.4.0-SNAPSHOT-bin.tar.gz .
 
 VOLUME ["/output", "/flowconf", "/flowrepo",  "/contentrepo", "/databaserepo", "/provenancerepo"]
 
