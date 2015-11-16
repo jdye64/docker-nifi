@@ -12,7 +12,7 @@ RUN sed -i 's/\.\/conf\/archive/\/flowconf\/archive/' ./nifi-0.4.0-SNAPSHOT/conf
 RUN sed -i 's/\.\/database_repository/\/databaserepo/g' ./nifi-0.4.0-SNAPSHOT/conf/nifi.properties
 RUN sed -i 's/\.\/provenance_repository/\/provenancerepo/g' ./nifi-0.4.0-SNAPSHOT/conf/nifi.properties
 
-
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 # web port
 EXPOSE 8080
 
