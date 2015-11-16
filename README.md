@@ -1,13 +1,9 @@
 
-# Introduction 
-
-Special thanks for Github user [trkurc](https://github.com/trkurc) for providing the 0.1.0 version
-
 Dockerfile to build a nifi container image
 
 ## Version
 
-Apache NiFi 0.2.1
+Apache NiFi 0.4.0-SNAPSHOT
 
 # Quick Start
 
@@ -18,16 +14,63 @@ This will open listening ports - ensure that your host OS has protections in pla
 You can launch the image using the docker command line
 
 ```bash
-docker run -d --name=nifi_021 \
--p 8080:8080 -p 8081:8081 \
--v /tmp/output:/output \
-jdye64/nifi_021
+docker run -d
+--name=nifi1 \
+-p 8080:8080 \
+-p 8081:8081 \
+aperepel/nifi
+```
+
+With Docker 1.9+ you can use SDN (software-defined networking). First, create a network:
+```
+docker network create nifi
+```
+Now specify the network you want to use when starting NiFi containers, e.g.:
+```
+docker run -d
+--name=nifi1 \
+--net=nifi
+-p 8080:8080 \
+-p 8081:8081 \
+aperepel/nifi
+
+...
+
+docker run -d
+--name=nifi2 \
+--net=nifi
+-p 8080:8080 \
+-p 8081:8081 \
+aperepel/nifi
+
+```
+
+Best part, containers can address each other via nice FQDN names:
+```
+# From nifi1 to nifi2
+docker exec -it nifi1 bash
+root@e2eae816a982:/nifi-0.4.0-SNAPSHOT# ping nifi2.nifi
+PING nifi2.nifi (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: icmp_seq=0 ttl=64 time=0.077 ms
+64 bytes from 172.18.0.2: icmp_seq=1 ttl=64 time=0.067 ms
+```
+
+Note `nifi2.nifi` is the name of the host, where `nifi` is the network name we provided before.
+
+Same example going the other direction:
+```
+# From nifi2 to nifi1
+docker exec -it nifi2 bash
+root@fa92dfe2b721:/nifi-0.4.0-SNAPSHOT# ping nifi1.nifi
+PING nifi1.nifi (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: icmp_seq=0 ttl=64 time=0.092 ms
+64 bytes from 172.18.0.3: icmp_seq=1 ttl=64 time=0.085 ms
 ```
 
 You can view the startup progress using docker logs command
 
 ```bash
-docker logs -f nifi_021
+docker logs -f nifi_040
 ```
 
 The application is started when you see a line similar to the one below:
