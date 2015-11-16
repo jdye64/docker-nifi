@@ -1,5 +1,13 @@
-nifi:
-  image: aperepel/nifi
+nifi1:
+  # image: aperepel/nifi
+  build: .
   ports:
     - 9091:8080
-  
+  net: nifi
+
+nifi2:
+  # image: aperepel/nifi
+  build: .
+  ports:
+    - 9091:8080
+  net: nifi
