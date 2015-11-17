@@ -3,7 +3,7 @@
 Dockerized multi-host NiFi. The following 2 deployments are provided:
 - Acquisition node talking to Processing-1 and Processing-2 nodes utilizing the site-to-site protocol
 and Remote Process Groups (RPG)
-- Acquisition node talking to a NiFi Cluster Manager, which, in turn, manages a cluster of processing nodes
+- Acquisition node talking to a NiFi Cluster Manager via RPG, which, in turn, manages a cluster of processing nodes
 
 https://github.com/docker/docker/blob/master/docs/userguide/networking/get-started-overlay.md
 
