@@ -15,7 +15,7 @@ EXPOSE 8080
 # listen port for web listening processor
 EXPOSE 8081
 
-WORKDIR nifi-0.4.0-SNAPSHOT/bin
+WORKDIR $NIFI_HOME/bin
 ADD ./run.sh .
 RUN chmod +x ./run.sh
 ENTRYPOINT ["./run.sh"]
