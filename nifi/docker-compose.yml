@@ -22,3 +22,13 @@ processing-1:
   environment:
     NIFI_UI_BANNER_TEXT: 'Processing Node'
   container_name: processing-1
+
+processing-2:
+  # image: aperepel/nifi
+  build: .
+  ports:
+    - 9092:8080
+  net: nifi
+  environment:
+    NIFI_UI_BANNER_TEXT: 'Processing Node'
+  container_name: processing-2
