@@ -1,4 +1,4 @@
-nifi1:
+acquisition:
   # image: aperepel/nifi
   build: .
   ports:
@@ -10,7 +10,7 @@ nifi1:
   environment:
     NIFI_UI_BANNER_TEXT: 'Acquisition Node'
 
-nifi2:
+processing:
   # image: aperepel/nifi
   build: .
   ports:
