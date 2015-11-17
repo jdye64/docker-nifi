@@ -2,8 +2,13 @@ nifi1:
   # image: aperepel/nifi
   build: .
   ports:
+    # keep the same port number across instances,
+    # this will ensure Swarm distributes the containers
+    # properly based on port anti-affinity
     - 9091:8080
   net: nifi
+  environment:
+    NIFI_UI_BANNER_TEXT: 'Acquisition Node'
 
 nifi2:
   # image: aperepel/nifi
@@ -11,3 +16,5 @@ nifi2:
   ports:
     - 9091:8080
   net: nifi
+  environment:
+    NIFI_UI_BANNER_TEXT: 'Processing Node'
