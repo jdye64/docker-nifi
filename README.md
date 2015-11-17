@@ -5,9 +5,31 @@ Dockerized multi-host NiFi. The following 2 deployments are provided:
 and Remote Process Groups (RPG)
 - Acquisition node talking to a NiFi Cluster Manager via RPG, which, in turn, manages a cluster of processing nodes
 
-https://github.com/docker/docker/blob/master/docs/userguide/networking/get-started-overlay.md
+# Pre-Requisites
+- Docker 1.9+
+- Docker Compose 1.5+
+- Docker Machine 0.5.0+
+- Docker Swarm 1.0+
+
+(all downloadable as a single Docker Toolbox package as well)
+
+The config leverages new Docker overlay networking (look Ma, no more linking!): https://github.com/docker/docker/blob/master/docs/userguide/networking/get-started-overlay.md
+
+## Create a discovery service
+```
+docker-machine create -d virtualbox mh-keystore
+docker $(docker-machine config mh-keystore) run -d \
+    -p "8500:8500" \
+    -h "consul" \
+    progrium/consul -server -bootstrap
+```
 
 ## swarm master
+Change machine defaults as follows for better startup experience:
+- Bump memory to 2GB
+- Bump CPU cores to 2
+- Reduce disk to 10GB or even less (20GB is not required for testing)
+
 ```
 docker-machine create \
                -d virtualbox \
@@ -35,6 +57,12 @@ docker-machine create \
               --engine-opt="cluster-advertise=eth1:2376" \
               host2
 ```
+
+## Tell Machine to use the Swarm cluster
+```
+eval $(docker-machine env --swarm host1)
+```
+All docker commands from this point will be issued against a cluster of VMs.
 
 ## create a multi-host network
 ```
