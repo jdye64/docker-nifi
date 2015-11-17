@@ -15,6 +15,14 @@ and Remote Process Groups (RPG)
 
 The config leverages new Docker overlay networking (look Ma, no more linking!): https://github.com/docker/docker/blob/master/docs/userguide/networking/get-started-overlay.md
 
+## Note on NiFi release
+The `Dockerfile` currently leverages a dev snapshot of NiFi 0.4.0, just put a tar.gz
+of the distro into `nifi` folder. This will be updated once 0.4.0 is out and propagates
+to public repositories.
+
+Also, the Compose configuration wil be updated to use a public image from Docker Hub after
+an official NiFi release.
+
 ## Create a discovery service
 ```
 docker-machine create -d virtualbox mh-keystore
