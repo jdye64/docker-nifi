@@ -24,6 +24,12 @@ Also, the Compose configuration wil be updated to use a public image from Docker
 an official NiFi release.
 
 ## Create a discovery service
+Multiple implementations are now supported:
+- Consul
+- ZooKeeper
+- Etcd
+
+We will use Consul in this case (because I like it's UI and REST API in general.)
 ```
 docker-machine create -d virtualbox mh-keystore
 docker $(docker-machine config mh-keystore) run -d \
