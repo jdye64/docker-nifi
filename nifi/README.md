@@ -1,12 +1,22 @@
+# Non-clustered Mode
 To stand up a NiFi distributed network:
 ```
 # from the 'nifi' directory
 docker-compose --x-networking up
 ```
 
-The command will
+Or send it to a background:
+```
+docker-compose --x-networking up -d
+```
 
 This is a workaround until https://github.com/docker/compose/issues/2312 is implemented.
+
+
+# Clustered Mode
+```
+docker-compose --file docker-compose-cluster.yml --project-name nifi --x-networking up
+```
 
 # Troubleshooting
 When startup complains about not being able to allocate port 9091 on any nodes, try the following:

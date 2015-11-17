@@ -31,14 +31,21 @@ Multiple implementations are now supported:
 
 We will use Consul in this case (because I like it's UI and REST API in general.)
 ```
-docker-machine create -d virtualbox mh-keystore
-docker $(docker-machine config mh-keystore) run -d \
-    -p "8500:8500" \
-    -h "consul" \
+docker-machine create \
+                -d virtualbox \
+                --virtualbox-memory 512 \
+                --virtualbox-cpu-count 1 \
+                --virtualbox-disk-size 512 \
+                keystore
+
+docker $(docker-machine config keystore) run -d \
+    -p 8500:8500 \
+    -h consul \
+    --name consul \
     progrium/consul -server -bootstrap
 ```
 
-## swarm master
+## Swarm master
 Change machine defaults as follows for better startup experience:
 - Bump memory to 2GB
 - Bump CPU cores to 2
@@ -52,13 +59,13 @@ docker-machine create \
                    --virtualbox-disk-size 10240 \
                --swarm \
                --swarm-master \
-               --swarm-discovery="consul://$(docker-machine ip mh-keystore):8500" \
-               --engine-opt="cluster-store=consul://$(docker-machine ip mh-keystore):8500" \
+               --swarm-discovery="consul://$(docker-machine ip keystore):8500" \
+               --engine-opt="cluster-store=consul://$(docker-machine ip keystore):8500" \
                --engine-opt="cluster-advertise=eth1:2376" \
                host1
 ```
 
-## swam additional node
+## Swarm additional node
 ```
 docker-machine create \
               -d virtualbox \
@@ -66,8 +73,8 @@ docker-machine create \
                   --virtualbox-cpu-count 2 \
                   --virtualbox-disk-size 10240 \
               --swarm \
-              --swarm-discovery="consul://$(docker-machine ip mh-keystore):8500" \
-              --engine-opt="cluster-store=consul://$(docker-machine ip mh-keystore):8500" \
+              --swarm-discovery="consul://$(docker-machine ip keystore):8500" \
+              --engine-opt="cluster-store=consul://$(docker-machine ip keystore):8500" \
               --engine-opt="cluster-advertise=eth1:2376" \
               host2
 ```
@@ -78,13 +85,14 @@ eval $(docker-machine env --swarm host1)
 ```
 All docker commands from this point will be issued against a cluster of VMs.
 
-## create a multi-host network
+## Create a multi-host network
 ```
 docker network create -d overlay nifi
 ```
 
-## start the cluster
+## Start the cluster
 ```
+cd nifi
 docker-compose --x-networking up
 ```
 

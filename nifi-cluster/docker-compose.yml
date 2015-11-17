@@ -6,7 +6,7 @@ acquisition:
     # this will ensure Swarm distributes the containers
     # properly based on port anti-affinity
     - 9091:8080
-  net: nifi
+  net: nifi-cluster
   environment:
     NIFI_UI_BANNER_TEXT: 'Acquisition Node'
     NIFI_INSTANCE_ROLE: 'edge'
@@ -14,24 +14,35 @@ acquisition:
   # https://github.com/docker/compose/issues/2312 is addressed
   container_name: acquisition
 
-processing-1:
+ncm:
   # image: aperepel/nifi
   build: ../docker/
   ports:
     - 9091:8080
-  net: nifi
+  net: nifi-cluster
   environment:
-    NIFI_UI_BANNER_TEXT: 'Processing Node'
-    NIFI_INSTANCE_ROLE: 'node'
-  container_name: processing-1
+    NIFI_UI_BANNER_TEXT: 'Processing Cluster'
+    NIFI_INSTANCE_ROLE: 'cluster-manager'
+  container_name: ncm
 
-processing-2:
+processing-1:
   # image: aperepel/nifi
   build: ../docker/
-  ports:
-    - 9092:8080
-  net: nifi
+  net: nifi-cluster
   environment:
-    NIFI_UI_BANNER_TEXT: 'Processing Node'
-    NIFI_INSTANCE_ROLE: 'node'
+    NIFI_UI_BANNER_TEXT: 'Processing Node 1'
+    NIFI_INSTANCE_ROLE: 'cluster-node'
+  ports:
+    - 10001:8080
+  container_name: processing-1
+
+processing-two:
+  # image: aperepel/nifi
+  build: ../docker/
+  net: nifi-cluster
+  environment:
+    NIFI_UI_BANNER_TEXT: 'Processing Node 2'
+    NIFI_INSTANCE_ROLE: 'cluster-node'
+  ports:
+    - 10002:8080
   container_name: processing-2
