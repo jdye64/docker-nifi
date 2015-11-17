@@ -9,8 +9,11 @@ acquisition:
   net: nifi
   environment:
     NIFI_UI_BANNER_TEXT: 'Acquisition Node'
+  # have to fix the container name until
+  # https://github.com/docker/compose/issues/2312 is addressed
+  container_name: acquisition
 
-processing:
+processing-1:
   # image: aperepel/nifi
   build: .
   ports:
@@ -18,3 +21,4 @@ processing:
   net: nifi
   environment:
     NIFI_UI_BANNER_TEXT: 'Processing Node'
+  container_name: processing-1
