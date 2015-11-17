@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 splash() {
   echo 'Environment:'
