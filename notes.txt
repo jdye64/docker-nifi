@@ -30,3 +30,7 @@ docker network create -d overlay nifi
 
 # start the cluster
 docker-compose --x-networking up
+
+# individual container
+docker run -itd -e "NIFI_UI_BANNER_TEXT=acquisition" --name nifi_a --net=nifi -h acquisition -p 9091:8080 aperepel/nifi
+docker run -itd -e "NIFI_UI_BANNER_TEXT=processing" --name nifi_p --net=nifi -h processing -p 9091:8080 aperepel/nifi
