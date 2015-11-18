@@ -12,7 +12,9 @@ acquisition:
     NIFI_INSTANCE_ROLE: 'edge'
   # have to fix the container name until
   # https://github.com/docker/compose/issues/2312 is addressed
-  container_name: acquisition
+  # it also has to be uniqie not to clash with the other 'nifi' project names
+  container_name: cluster-acquisition
+  hostname: cluster-acquisition
 
 ncm:
   # image: aperepel/nifi
@@ -23,7 +25,8 @@ ncm:
   environment:
     NIFI_UI_BANNER_TEXT: 'Processing Cluster'
     NIFI_INSTANCE_ROLE: 'cluster-manager'
-  container_name: ncm
+  container_name: cluster-ncm
+  hostname: cluster-ncm
 
 processing-1:
   # image: aperepel/nifi
@@ -33,16 +36,17 @@ processing-1:
     NIFI_UI_BANNER_TEXT: 'Processing Node 1'
     NIFI_INSTANCE_ROLE: 'cluster-node'
   ports:
-    - 10001:8080
-  container_name: processing-1
+    - 9091:8080
+  container_name: cluster-node-1
+  hostname: cluster-node-1
 
-processing-two:
+# processing-2:
   # image: aperepel/nifi
-  build: ../docker/
-  net: nifi-cluster
-  environment:
-    NIFI_UI_BANNER_TEXT: 'Processing Node 2'
-    NIFI_INSTANCE_ROLE: 'cluster-node'
-  ports:
-    - 10002:8080
-  container_name: processing-2
+  # build: ../docker/
+  # net: nifi-cluster
+  # environment:
+    # NIFI_UI_BANNER_TEXT: 'Processing Node 2'
+    # NIFI_INSTANCE_ROLE: 'cluster-node'
+  # ports:
+    # - 10002:8080
+  # container_name: cluster-node-2
