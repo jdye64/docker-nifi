@@ -25,22 +25,31 @@ configure_site2site() {
 }
 
 configure_cluster_node() {
+  # can't set to 0.0.0.0, as this address is then sent verbatim to NCM, which, in turn
+  # does not resolve it back to the node. If it's set to the ${HOSTNAME}, the cluster works,
+  # but the node's web ui is not accessible on the external network
+  #sed -i "s/nifi\.web\.http\.host=/nifi.web.http.host=0.0.0.0/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.web\.http\.host=/nifi.web.http.host=${HOSTNAME}/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.is\.node=false/nifi.cluster.is.node=true/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.node\.address=/nifi.cluster.node.address=${HOSTNAME}/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.node\.protocol\.port=/nifi.cluster.node.protocol.port=12346/g" $NIFI_HOME/conf/nifi.properties
+  # the following properties point to the NCM
   sed -i "s/nifi\.cluster\.node\.unicast\.manager\.address=/nifi.cluster.node.unicast.manager.address=cluster-ncm/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.node\.unicast\.manager\.protocol\.port=/nifi.cluster.node.unicast.manager.protocol.port=20001/g" $NIFI_HOME/conf/nifi.properties
 }
 
 configure_cluster_manager() {
+  sed -i "s/nifi\.web\.http\.host=/nifi.web.http.host=0.0.0.0/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.is\.manager=false/nifi.cluster.is.manager=true/g" $NIFI_HOME/conf/nifi.properties
-  sed -i "s/nifi\.cluster\.manager\.address=/nifi.cluster.manager.address=cluster-ncm/g" $NIFI_HOME/conf/nifi.properties
+  sed -i "s/nifi\.cluster\.manager\.address=/nifi.cluster.manager.address=${HOSTNAME}/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.manager\.protocol\.port=/nifi.cluster.manager.protocol.port=20001/g" $NIFI_HOME/conf/nifi.properties
 }
 
 splash
 configure_common
+
+# we don't configure acquisition node to serve site-to-site requests,
+# the node initiates push/pull only
 
 if [ "$NIFI_INSTANCE_ROLE" == "node" ]; then
   configure_site2site
