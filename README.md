@@ -65,7 +65,7 @@ docker-machine create \
                host1
 ```
 
-## Swarm additional node
+## Swarm additional node (3 total)
 ```
 docker-machine create \
               -d virtualbox \
@@ -77,26 +77,45 @@ docker-machine create \
               --engine-opt="cluster-store=consul://$(docker-machine ip keystore):8500" \
               --engine-opt="cluster-advertise=eth1:2376" \
               host2
+
+
+docker-machine create \
+              -d virtualbox \
+                  --virtualbox-memory 2048 \
+                  --virtualbox-cpu-count 2 \
+                  --virtualbox-disk-size 10240 \
+              --swarm \
+              --swarm-discovery="consul://$(docker-machine ip keystore):8500" \
+              --engine-opt="cluster-store=consul://$(docker-machine ip keystore):8500" \
+              --engine-opt="cluster-advertise=eth1:2376" \
+              host2
+
 ```
 
 ## Tell Machine to use the Swarm cluster
 ```
 eval $(docker-machine env --swarm host1)
 ```
+
 All docker commands from this point will be issued against a cluster of VMs.
 
-## Create a multi-host network
+# Troubleshooting
+When startup complains about not being able to allocate port 9091 on any nodes, try the following:
 ```
-docker network create -d overlay nifi
-```
-
-## Start the cluster
-```
-cd nifi
+docker-compose stop
+docker-compose rm -f
+docker ps -a
+# look for any containers related to NiFi
+docker rm <containerId>
 docker-compose --x-networking up
 ```
 
-# Misc
+The port binding will ensure only 1 instance is bound per node/vm. One can edit the `docker-compose.yml`
+file to change binding ports for processing nodes, as an alternative.
+
+Of course, when running in a cluster, this won't be an issue, as the web ui port need not
+be even exposed (nodes will deny access and send the user to the NiFi Cluster Manager instance instead.)
+
 Should you need to troubleshoot issues with how Docker Compose generates and manages hostnames, here's a command one
 can use to run containers manually (non-orchestrated).
 
