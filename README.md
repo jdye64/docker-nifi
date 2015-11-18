@@ -23,6 +23,9 @@ to public repositories.
 Also, the Compose configuration wil be updated to use a public image from Docker Hub after
 an official NiFi release.
 
+# Automated Environment bootstrap
+Run the `bootstrap_vms.sh` in the root folder. Below commands are for educational and documentation purposes.
+
 ## Create a discovery service
 Multiple implementations are now supported:
 - Consul
@@ -65,7 +68,7 @@ docker-machine create \
                host1
 ```
 
-## Swarm additional node (3 total)
+## Swarm additional node
 ```
 docker-machine create \
               -d virtualbox \
@@ -77,19 +80,6 @@ docker-machine create \
               --engine-opt="cluster-store=consul://$(docker-machine ip keystore):8500" \
               --engine-opt="cluster-advertise=eth1:2376" \
               host2
-
-
-docker-machine create \
-              -d virtualbox \
-                  --virtualbox-memory 2048 \
-                  --virtualbox-cpu-count 2 \
-                  --virtualbox-disk-size 10240 \
-              --swarm \
-              --swarm-discovery="consul://$(docker-machine ip keystore):8500" \
-              --engine-opt="cluster-store=consul://$(docker-machine ip keystore):8500" \
-              --engine-opt="cluster-advertise=eth1:2376" \
-              host2
-
 ```
 
 ## Tell Machine to use the Swarm cluster
@@ -98,6 +88,15 @@ eval $(docker-machine env --swarm host1)
 ```
 
 All docker commands from this point will be issued against a cluster of VMs.
+
+
+# Pull images on every host
+
+To ensure smooth operations of `docker-compose` it is recommended to cache a container image on every node:
+```
+cd nifi-cluster
+docker-compose pull
+```
 
 # Troubleshooting
 When startup complains about not being able to allocate port 9091 on any nodes, try the following:
