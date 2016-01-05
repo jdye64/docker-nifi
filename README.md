@@ -98,6 +98,10 @@ cd nifi-cluster
 docker-compose pull
 ```
 
+# Choose your runtime
+* [Standalone NiFi instances communicating between each other](nifi/README.md)
+* [A NiFi cluster with an additional acquisition node talking to the cluster](nifi-cluster/README.md)
+
 # Troubleshooting
 When startup complains about not being able to allocate port 9091 on any nodes, try the following:
 ```
