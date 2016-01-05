@@ -16,6 +16,13 @@ EXPOSE 8080
 # listen port for web listening processor
 EXPOSE 8081
 
+# additional ports for user apps (bind them in a docker-compose.yml 'ports' section)
+EXPOSE 10000
+EXPOSE 10001
+EXPOSE 10002
+EXPOSE 10003
+EXPOSE 10004
+
 WORKDIR $NIFI_HOME/bin
 ADD ./run.sh .
 RUN chmod +x ./run.sh
