@@ -96,7 +96,7 @@ docker-compose pull
 
 # How do I get my data in?
 NiFi nodes will have no problems reaching out to an outside world for data (only governed by your host firewall).
-If, however, the intent is to push data in (NiFi listens on a port), then edit a corresponding `docker-compose.yml'
+If, however, the intent is to push data into a cluster (NiFi listens on a port), then edit a corresponding `docker-compose.yml'
 file and bind your host's ports to one of the ports exposed by this docker container (10000-10004, total of 5 extra ports).
 
 # Troubleshooting
