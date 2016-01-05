@@ -1,11 +1,12 @@
 FROM java:8-jdk
 MAINTAINER Andrew Grande
 
-ADD ./nifi-0.4.0-SNAPSHOT-bin.tar.gz .
+RUN wget http://public-repo-1.hortonworks.com/HDF/1.1.1.0/nifi-1.1.1.0-12-bin.tar.gz && tar zxf nifi*.tar.gz
+#ADD ./nifi-0.4.0-SNAPSHOT-bin.tar.gz .
 
 VOLUME ["/output", "/flowconf", "/flowrepo",  "/contentrepo", "/databaserepo", "/provenancerepo"]
 
-ENV NIFI_HOME=/nifi-0.4.0-SNAPSHOT
+ENV NIFI_HOME=/nifi-1.1.1.0-12
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
