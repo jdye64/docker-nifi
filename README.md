@@ -94,6 +94,11 @@ docker-compose pull
 * [Standalone NiFi instances communicating between each other](nifi/README.md)
 * [A NiFi cluster with an additional acquisition node talking to the cluster](nifi-cluster/README.md)
 
+# How do I get my data in?
+NiFi nodes will have no problems reaching out to an outside world for data (only governed by your host firewall).
+If, however, the intent is to push data in (NiFi listens on a port), then edit a corresponding `docker-compose.yml'
+file and bind your host's ports to one of the ports exposed by this docker container (10000-10004, total of 5 extra ports).
+
 # Troubleshooting
 When startup complains about not being able to allocate port 9091 on any nodes, try the following:
 ```
