@@ -24,7 +24,7 @@ Multiple implementations are now supported:
 - ZooKeeper
 - Etcd
 
-We will use Consul in this case (because I like it's UI and REST API in general.)
+We will use Consul in this case (because I like its UI and REST API in general.)
 ```
 docker-machine create \
                 -d virtualbox \
