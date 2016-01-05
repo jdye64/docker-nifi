@@ -21,3 +21,6 @@ Or send it to a background:
 docker-compose --x-networking up -d
 ```
 
+## Where's my UI?
+
+Same [instructions](../nifi-cluster/README.md) as for the NiFi Cluster mode
