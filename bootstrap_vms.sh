@@ -1,6 +1,7 @@
 #!/bin/bash
 
 create_host() {
+  splash "Creating a node: $1"
   docker-machine create \
                 -d virtualbox \
                     --virtualbox-memory 2048 \
@@ -13,6 +14,14 @@ create_host() {
                 $1
 }
 
+splash() {
+  echo -e "\n\n"
+  echo "*************************************************"
+  echo "   $1"
+  echo "*************************************************"
+}
+
+splash "Creating a Keystore instance"
 docker-machine create \
                 -d virtualbox \
                 --virtualbox-memory 512 \
@@ -21,12 +30,14 @@ docker-machine create \
                 keystore
 
 
+splash "Starting a Consul store"
 docker $(docker-machine config keystore) run -d \
           -p 8500:8500 \
           -h consul \
           --name consul \
           progrium/consul -server -bootstrap
 
+splash "Creating a Swarm Master instance"
 docker-machine create \
                -d virtualbox \
                    --virtualbox-memory 2048 \
@@ -43,8 +54,12 @@ create_host host2
 create_host host3
 create_host host4
 
+splash "Configuring for Swarm"
+eval $(docker-machine env --swarm host1)
 
+splash "Creating overlay networks"
 docker network create -d overlay nifi
 docker network create -d overlay nifi-cluster
 
+splash "Done"
 echo 'Now run: eval $(docker-machine env --swarm host1)'
