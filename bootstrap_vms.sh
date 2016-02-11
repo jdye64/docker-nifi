@@ -57,9 +57,10 @@ create_host host4
 splash "Configuring for Swarm"
 eval $(docker-machine env --swarm host1)
 
-splash "Creating overlay networks"
-docker network create -d overlay nifi
-docker network create -d overlay nifi-cluster
+# we are creating a default overlay network in docker-compose.yml now
+# splash "Creating overlay networks"
+# docker network create -d overlay nifi
+# docker network create -d overlay nifi-cluster
 
 splash "Done"
 echo 'Now run: eval $(docker-machine env --swarm host1)'

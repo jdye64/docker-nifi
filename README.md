@@ -8,6 +8,8 @@ and Remote Process Groups (RPG)
 # Docker Networking is now GA
 Docker graduated the networking to a GA status, with docker-compose updating the file format to support it as well now. It is important you upgrade to the below minimum levels or things will not work.
 
+This also means explicitly creating an overlay network in advance is **no longer required**.
+
 Please check git tags in the above dropdown for instructions suitable for older releases (e.g. `docker-1.9.0').
 
 # Pre-Requisites
