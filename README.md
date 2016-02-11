@@ -5,11 +5,16 @@ Dockerized multi-host NiFi. The following 2 deployments are provided:
 and Remote Process Groups (RPG)
 - Acquisition node talking to a NiFi Cluster Manager via RPG, which, in turn, manages a cluster of processing nodes
 
+# Docker Networking is now GA
+Docker graduated the networking to a GA status, with docker-compose updating the file format to support it as well now. It is important you upgrade to the below minimum levels or things will not work.
+
+Please check git tags in the above dropdown for instructions suitable for older releases (e.g. `docker-1.9.0').
+
 # Pre-Requisites
-- Docker 1.9+
-- Docker Compose 1.5+
-- Docker Machine 0.5.0+
-- Docker Swarm 1.0+
+- Docker 1.10+
+- Docker Compose 1.6+
+- Docker Machine 0.6.0+
+- Docker Swarm 1.1+
 
 (all downloadable as a single Docker Toolbox package as well)
 
@@ -100,6 +105,16 @@ If, however, the intent is to push data into a cluster (NiFi listens on a port),
 file and bind your host's ports to one of the ports exposed by this docker container (10000-10004, total of 5 extra ports).
 
 # Troubleshooting
+## My `docker network ls` command hangs
+Have you run `bootstrap_vms.sh` script? It instructs a user to run this command at the very end, this is critical. Unfortunately, a bash script can't export variables into a caller environment, so this command **has to be run manually**:
+```
+eval $(docker-machine env --swarm host1)
+```
+Docker network commands will work after that.
+
+## Port conflicts
+**TODO update, as `--x-networking` has now been removed**
+
 When startup complains about not being able to allocate port 9091 on any nodes, try the following:
 ```
 docker-compose stop
@@ -116,6 +131,7 @@ file to change binding ports for processing nodes, as an alternative.
 Of course, when running in a cluster, this won't be an issue, as the web ui port need not
 be even exposed (nodes will deny access and send the user to the NiFi Cluster Manager instance instead.)
 
+## Host names
 Should you need to troubleshoot issues with how Docker Compose generates and manages hostnames, here's a command one
 can use to run containers manually (non-orchestrated).
 
