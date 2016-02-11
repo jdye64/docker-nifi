@@ -1,3 +1,15 @@
+# Note
+```
+Master branch instructions won't work due to the bug in docker-compose:
+https://github.com/docker/compose/issues/2892
+
+The fix is in docker-compose 1.6.1, which hasn't been released yet.
+
+Until then, either get on the latest docker-compose snapshot version or,
+alternatively, use the older, https://github.com/aperepel/docker-nifi/tree/docker-1.9.0
+tag and configs.
+```
+
 # Overview
 
 Dockerized multi-host NiFi. The following 2 deployments are provided:
