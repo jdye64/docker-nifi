@@ -21,7 +21,7 @@ docker-machine create \
                 keystore
 
 
-docker "$(docker-machine config keystore)" run -d \
+docker $(docker-machine config keystore) run -d \
           -p 8500:8500 \
           -h consul \
           --name consul \
