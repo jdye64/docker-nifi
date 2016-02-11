@@ -1,53 +1,51 @@
-acquisition:
-  image: aperepel/nifi
-  # build: ../docker/
-  ports:
-    # keep the same port number across instances,
-    # this will ensure Swarm distributes the containers
-    # properly based on port anti-affinity
-    - 9091:8080
-  net: nifi-cluster
-  environment:
-    NIFI_UI_BANNER_TEXT: 'Acquisition Node'
-    NIFI_INSTANCE_ROLE: 'edge'
-  # have to fix the container name until
-  # https://github.com/docker/compose/issues/2312 is addressed
-  # it also has to be uniqie not to clash with the other 'nifi' project names
-  container_name: cluster-acquisition
-  hostname: cluster-acquisition
+version: '2'
 
-ncm:
-  image: aperepel/nifi
-  # build: ../docker/
-  ports:
-    - 9091:8080
-  net: nifi-cluster
-  environment:
-    NIFI_UI_BANNER_TEXT: 'Processing Cluster'
-    NIFI_INSTANCE_ROLE: 'cluster-manager'
-  container_name: cluster-ncm
-  hostname: cluster-ncm
+networks:
+  default:
+    driver: overlay
 
-processing-1:
-  image: aperepel/nifi
-  # build: ../docker/
-  net: nifi-cluster
-  environment:
-    NIFI_UI_BANNER_TEXT: 'Processing Node 1'
-    NIFI_INSTANCE_ROLE: 'cluster-node'
-  ports:
-    - 9091:8080
-  container_name: cluster-node-1
-  hostname: cluster-node-1
 
-processing-2:
-  image: aperepel/nifi
-  # build: ../docker/
-  net: nifi-cluster
-  environment:
-    NIFI_UI_BANNER_TEXT: 'Processing Node 2'
-    NIFI_INSTANCE_ROLE: 'cluster-node'
-  ports:
-    - 9091:8080
-  container_name: cluster-node-2
-  hostname: cluster-node-2
+services:
+
+  acquisition:
+    image: aperepel/nifi
+    # build: ../docker/
+    ports:
+      # keep the same port number across instances,
+      # this will ensure Swarm distributes the containers
+      # properly based on port anti-affinity
+      - 9091:8080
+    environment:
+      NIFI_UI_BANNER_TEXT: 'Acquisition Node'
+      NIFI_INSTANCE_ROLE: 'edge'
+    # hostname: cluster-acquisition
+
+  ncm:
+    image: aperepel/nifi
+    # build: ../docker/
+    ports:
+      - 9091:8080
+    environment:
+      NIFI_UI_BANNER_TEXT: 'Processing Cluster'
+      NIFI_INSTANCE_ROLE: 'cluster-manager'
+    # hostname: cluster-ncm
+
+  processing-1:
+    image: aperepel/nifi
+    # build: ../docker/
+    environment:
+      NIFI_UI_BANNER_TEXT: 'Processing Node 1'
+      NIFI_INSTANCE_ROLE: 'cluster-node'
+    ports:
+      - 9091:8080
+    # hostname: cluster-node-1
+
+  processing-2:
+    image: aperepel/nifi
+    # build: ../docker/
+    environment:
+      NIFI_UI_BANNER_TEXT: 'Processing Node 2'
+      NIFI_INSTANCE_ROLE: 'cluster-node'
+    ports:
+      - 9091:8080
+    # hostname: cluster-node-2
