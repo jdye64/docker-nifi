@@ -33,8 +33,8 @@ configure_cluster_node() {
   sed -i "s/nifi\.cluster\.is\.node=false/nifi.cluster.is.node=true/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.node\.address=/nifi.cluster.node.address=${HOSTNAME}/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.node\.protocol\.port=/nifi.cluster.node.protocol.port=12346/g" $NIFI_HOME/conf/nifi.properties
-  # the following properties point to the NCM
-  sed -i "s/nifi\.cluster\.node\.unicast\.manager\.address=/nifi.cluster.node.unicast.manager.address=cluster-ncm/g" $NIFI_HOME/conf/nifi.properties
+  # the following properties point to the NCM - note we are using the network alias (implicitly created by docker-compose)
+  sed -i "s/nifi\.cluster\.node\.unicast\.manager\.address=/nifi.cluster.node.unicast.manager.address=ncm/g" $NIFI_HOME/conf/nifi.properties
   sed -i "s/nifi\.cluster\.node\.unicast\.manager\.protocol\.port=/nifi.cluster.node.unicast.manager.protocol.port=20001/g" $NIFI_HOME/conf/nifi.properties
 }
 
