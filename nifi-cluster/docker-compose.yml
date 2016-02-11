@@ -30,22 +30,12 @@ services:
       NIFI_INSTANCE_ROLE: 'cluster-manager'
     # hostname: cluster-ncm
 
-  processing-1:
+  processing:
     image: aperepel/nifi
     # build: ../docker/
     environment:
-      NIFI_UI_BANNER_TEXT: 'Processing Node 1'
+      NIFI_UI_BANNER_TEXT: 'Processing Node'
       NIFI_INSTANCE_ROLE: 'cluster-node'
     ports:
       - 9091:8080
     # hostname: cluster-node-1
-
-  processing-2:
-    image: aperepel/nifi
-    # build: ../docker/
-    environment:
-      NIFI_UI_BANNER_TEXT: 'Processing Node 2'
-      NIFI_INSTANCE_ROLE: 'cluster-node'
-    ports:
-      - 9091:8080
-    # hostname: cluster-node-2
