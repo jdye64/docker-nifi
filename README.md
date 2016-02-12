@@ -16,6 +16,7 @@ Dockerized multi-host NiFi. The following 2 deployments are provided:
 - Acquisition node talking to Processing-1 and Processing-2 nodes utilizing the site-to-site protocol
 and Remote Process Groups (RPG)
 - Acquisition node talking to a NiFi Cluster Manager via RPG, which, in turn, manages a cluster of processing nodes
+- NiFi processing nodes can be scaled up and down via standard a `docker-compose scale` command (starts with 1)
 
 # Docker Networking is now GA
 Docker graduated the networking to a GA status, with docker-compose updating the file format to support it as well now. It is important you upgrade to the below minimum levels or things will not work.
@@ -109,9 +110,48 @@ cd nifi-cluster
 docker-compose pull
 ```
 
-# Choose your runtime
-* [Standalone NiFi instances communicating between each other](nifi/README.md)
-* [A NiFi cluster with an additional acquisition node talking to the cluster](nifi-cluster/README.md)
+# Clustered Mode
+Deployment layout:
+- Acquisition node
+- NiFi Cluster Manager (NCM) node
+- Processing node (potentially multilpe)
+
+## Start the containers
+```
+cd nifi-cluster
+docker-compose up
+```
+
+## Where's my UI?
+If you are running `docker-compose` in a foreground, open a new terminal and execute these commands:
+```
+♨> eval $(docker-machine env --swarm host1)
+
+♨> docker-compose ps
+Name              Command    State                                                Ports
+----------------------------------------------------------------------------------------------------------------------------------------------
+nificluster_acquisition_1   ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.104:9091->8080/tcp, 8081/tcp
+nificluster_ncm_1           ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.103:9091->8080/tcp, 8081/tcp
+nificluster_processing_1    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32770->8080/tcp, 8081/tcp
+```
+
+You are interested in the manager node `nificluster_ncm_1 - http://192.168.99.103:9091` and `nificluster_acquisition_1 - http://192.168.99.104:9091` nodes.
+
+## Flex the Cluster
+Change the number of processing nodes in a cluster (`processing` us the worker node service name from our `docker-compose.yml`):
+```
+♨ >  docker-compose scale processing=3
+Creating and starting 2 ... done
+Creating and starting 3 ... done
+♨ >  docker-compose ps
+          Name              Command    State                                                Ports
+----------------------------------------------------------------------------------------------------------------------------------------------
+nificluster_acquisition_1   ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.104:9091->8080/tcp, 8081/tcp
+nificluster_ncm_1           ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.103:9091->8080/tcp, 8081/tcp
+nificluster_processing_1    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32770->8080/tcp, 8081/tcp
+nificluster_processing_2    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.101:32768->8080/tcp, 8081/tcp
+nificluster_processing_3    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32771->8080/tcp, 8081/tcp
+```
 
 # How do I get my data in?
 NiFi nodes will have no problems reaching out to an outside world for data (only governed by your host firewall).

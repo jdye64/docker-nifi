@@ -18,7 +18,6 @@ services:
     environment:
       NIFI_UI_BANNER_TEXT: 'Acquisition Node'
       NIFI_INSTANCE_ROLE: 'edge'
-    # hostname: cluster-acquisition
 
   ncm:
     image: aperepel/nifi
@@ -28,7 +27,6 @@ services:
     environment:
       NIFI_UI_BANNER_TEXT: 'Processing Cluster'
       NIFI_INSTANCE_ROLE: 'cluster-manager'
-    # hostname: cluster-ncm
 
   processing:
     image: aperepel/nifi
@@ -37,5 +35,4 @@ services:
       NIFI_UI_BANNER_TEXT: 'Processing Node'
       NIFI_INSTANCE_ROLE: 'cluster-node'
     ports:
-      - 9091:8080
-    # hostname: cluster-node-1
+      - 8080
