@@ -1,4 +1,4 @@
-FROM java:8-jdk
+FROM java:8-jre
 MAINTAINER Andrew Grande
 
 RUN wget --no-verbose http://public-repo-1.hortonworks.com/HDF/1.1.1.0/nifi-1.1.1.0-12-bin.tar.gz && tar zxf nifi*.tar.gz && rm -f nifi*.tar.gz
