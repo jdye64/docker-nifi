@@ -138,7 +138,7 @@ nificluster_processing_1    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 
 You are interested in the manager node `nificluster_ncm_1 - http://192.168.99.103:9091` and `nificluster_acquisition_1 - http://192.168.99.104:9091` nodes.
 
 ## Flex the Cluster
-Change the number of processing nodes in a cluster (`processing` us the worker node service name from our `docker-compose.yml`):
+Change the number of processing nodes in a cluster (`processing` is the worker node service name from our `docker-compose.yml`):
 ```
 ♨ >  docker-compose scale processing=3
 Creating and starting 2 ... done
@@ -152,6 +152,9 @@ nificluster_processing_1    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 
 nificluster_processing_2    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.101:32768->8080/tcp, 8081/tcp
 nificluster_processing_3    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32771->8080/tcp, 8081/tcp
 ```
+
+Now go to the NCM host and click on the `Cluster` menu item on the right. New nodes will appear shortly after registering with the
+manager.
 
 # How do I get my data in?
 NiFi nodes will have no problems reaching out to an outside world for data (only governed by your host firewall).
