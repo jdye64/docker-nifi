@@ -27,7 +27,7 @@ Please check git tags in the above dropdown for instructions suitable for older 
 
 # Pre-Requisites
 - Docker 1.10+
-- Docker Compose 1.6+
+- Docker Compose 1.6.1+
 - Docker Machine 0.6.0+
 - Docker Swarm 1.1+
 
