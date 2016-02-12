@@ -16,7 +16,7 @@ Dockerized multi-host NiFi. The following 2 deployments are provided:
 - Acquisition node talking to Processing-1 and Processing-2 nodes utilizing the site-to-site protocol
 and Remote Process Groups (RPG)
 - Acquisition node talking to a NiFi Cluster Manager via RPG, which, in turn, manages a cluster of processing nodes
-- NiFi processing nodes can be scaled up and down via standard a `docker-compose scale` command (starts with 1)
+- NiFi processing nodes can be scaled up and down via a standard `docker-compose scale` command (starts with 1 node)
 
 # Docker Networking is now GA
 Docker graduated the networking to a GA status, with docker-compose updating the file format to support it as well now. It is important you upgrade to the below minimum levels or things will not work.
