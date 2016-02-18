@@ -13,10 +13,10 @@ tag and configs.
 # Overview
 
 Dockerized multi-host NiFi. The following 2 deployments are provided:
-- Acquisition node talking to Processing-1 and Processing-2 nodes utilizing the site-to-site protocol
+- Acquisition node talking to Worker-1 and Worker-2 nodes utilizing the site-to-site protocol
 and Remote Process Groups (RPG)
 - Acquisition node talking to a NiFi Cluster Manager via RPG, which, in turn, manages a cluster of processing nodes
-- NiFi processing nodes can be scaled up and down via a standard `docker-compose scale` command (starts with 1 node)
+- NiFi worker nodes can be scaled up and down via a standard `docker-compose scale` command (starts with 1 node)
 
 # Docker Networking is now GA
 Docker graduated the networking to a GA status, with docker-compose updating the file format to support it as well now. It is important you upgrade to the below minimum levels or things will not work.
@@ -114,7 +114,7 @@ docker-compose pull
 Deployment layout:
 - Acquisition node
 - NiFi Cluster Manager (NCM) node
-- Processing node (potentially multilpe)
+- Worker node (potentially multilpe)
 
 ## Start the containers
 ```
@@ -132,15 +132,15 @@ Name              Command    State                                              
 ----------------------------------------------------------------------------------------------------------------------------------------------
 nificluster_acquisition_1   ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.104:9091->8080/tcp, 8081/tcp
 nificluster_ncm_1           ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.103:9091->8080/tcp, 8081/tcp
-nificluster_processing_1    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32770->8080/tcp, 8081/tcp
+nificluster_worker_1        ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32770->8080/tcp, 8081/tcp
 ```
 
 You are interested in the manager node `nificluster_ncm_1 - http://192.168.99.103:9091` and `nificluster_acquisition_1 - http://192.168.99.104:9091` nodes.
 
 ## Flex the Cluster
-Change the number of processing nodes in a cluster (`processing` is the worker node service name from our `docker-compose.yml`):
+Change the number of processing nodes in a cluster (`worker` is the worker node service name from our `docker-compose.yml`):
 ```
-♨ >  docker-compose scale processing=3
+♨ >  docker-compose scale worker=3
 Creating and starting 2 ... done
 Creating and starting 3 ... done
 ♨ >  docker-compose ps
@@ -148,9 +148,9 @@ Creating and starting 3 ... done
 ----------------------------------------------------------------------------------------------------------------------------------------------
 nificluster_acquisition_1   ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.104:9091->8080/tcp, 8081/tcp
 nificluster_ncm_1           ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.103:9091->8080/tcp, 8081/tcp
-nificluster_processing_1    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32770->8080/tcp, 8081/tcp
-nificluster_processing_2    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.101:32768->8080/tcp, 8081/tcp
-nificluster_processing_3    ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32771->8080/tcp, 8081/tcp
+nificluster_worker_1        ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32770->8080/tcp, 8081/tcp
+nificluster_worker_2        ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.101:32768->8080/tcp, 8081/tcp
+nificluster_worker_3        ./run.sh   Up      10000/tcp, 10001/tcp, 10002/tcp, 10003/tcp, 10004/tcp, 192.168.99.102:32771->8080/tcp, 8081/tcp
 ```
 
 Now go to the NCM host and click on the `Cluster` menu item on the right. New nodes will appear shortly after registering with the
@@ -168,31 +168,3 @@ Have you run `bootstrap_vms.sh` script? It instructs a user to run this command 
 eval $(docker-machine env --swarm host1)
 ```
 Docker network commands will work after that.
-
-## Port conflicts
-**TODO update, as `--x-networking` has now been removed**
-
-When startup complains about not being able to allocate port 9091 on any nodes, try the following:
-```
-docker-compose stop
-docker-compose rm -f
-docker ps -a
-# look for any containers related to NiFi
-docker rm <containerId>
-docker-compose --x-networking up
-```
-
-The port binding will ensure only 1 instance is bound per node/vm. One can edit the `docker-compose.yml`
-file to change binding ports for processing nodes, as an alternative.
-
-Of course, when running in a cluster, this won't be an issue, as the web ui port need not
-be even exposed (nodes will deny access and send the user to the NiFi Cluster Manager instance instead.)
-
-## Host names
-Should you need to troubleshoot issues with how Docker Compose generates and manages hostnames, here's a command one
-can use to run containers manually (non-orchestrated).
-
-```
-docker run -itd -e "NIFI_UI_BANNER_TEXT=acquisition" --name nifi_a --net=nifi -h acquisition -p 9091:8080 aperepel/nifi
-docker run -itd -e "NIFI_UI_BANNER_TEXT=processing" --name nifi_p --net=nifi -h processing -p 9091:8080 aperepel/nifi
-```
