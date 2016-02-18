@@ -28,7 +28,7 @@ services:
       NIFI_UI_BANNER_TEXT: 'Processing Cluster'
       NIFI_INSTANCE_ROLE: 'cluster-manager'
 
-  processing:
+  worker:
     image: aperepel/nifi
     # build: ../docker/
     environment:
