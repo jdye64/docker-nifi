@@ -1,29 +1,15 @@
-# Note
-```
-Master branch instructions won't work due to the bug in docker-compose:
-https://github.com/docker/compose/issues/2892
-
-The fix is in docker-compose 1.6.1, which hasn't been released yet.
-
-Until then, either get on the latest docker-compose snapshot version or,
-alternatively, use the older, https://github.com/aperepel/docker-nifi/tree/docker-1.9.0
-tag and configs.
-```
-
 # Overview
 
 Dockerized multi-host NiFi. The following 2 deployments are provided:
-- Acquisition node talking to Worker-1 and Worker-2 nodes utilizing the site-to-site protocol
-and Remote Process Groups (RPG)
-- Acquisition node talking to a NiFi Cluster Manager via RPG, which, in turn, manages a cluster of processing nodes
-- NiFi worker nodes can be scaled up and down via a standard `docker-compose scale` command (starts with 1 node)
+- Acquisition (standalone) node talking to a NiFi Cluster Manager via RPG (site-to-site), which, in turn, manages a cluster of processing nodes
+- NiFi worker nodes can be scaled up and down via a standard `docker-compose scale worker=N` command (starts with 1 node)
 
 # Docker Networking is now GA
 Docker graduated the networking to a GA status, with docker-compose updating the file format to support it as well now. It is important you upgrade to the below minimum levels or things will not work.
 
 This also means explicitly creating an overlay network in advance is **no longer required**.
 
-Please check git tags in the above dropdown for instructions suitable for older releases (e.g. `docker-1.9.0').
+Ensure the following pre-requisites are met (due to some blocker bugs in earlier versions). As of today, the latest Docker Toolbox and Homebrew are fine.
 
 # Pre-Requisites
 - Docker 1.10+
