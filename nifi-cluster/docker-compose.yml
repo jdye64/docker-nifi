@@ -15,6 +15,12 @@ services:
       # this will ensure Swarm distributes the containers
       # properly based on port anti-affinity
       - 9091:8080
+      - 10000
+      - 10001
+      - 10002
+      - 10003
+      - 10004
+
     environment:
       NIFI_UI_BANNER_TEXT: 'Acquisition Node'
       NIFI_INSTANCE_ROLE: 'edge'
@@ -35,4 +41,8 @@ services:
       NIFI_UI_BANNER_TEXT: 'Processing Node'
       NIFI_INSTANCE_ROLE: 'cluster-node'
     ports:
-      - 8080
+      - 10000
+      - 10001
+      - 10002
+      - 10003
+      - 10004
