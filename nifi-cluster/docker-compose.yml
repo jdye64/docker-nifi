@@ -1,0 +1,48 @@
+version: '2'
+
+networks:
+  default:
+    driver: overlay
+
+
+services:
+
+  acquisition:
+    image: aperepel/nifi
+    # build: ../docker/
+    ports:
+      # keep the same port number across instances,
+      # this will ensure Swarm distributes the containers
+      # properly based on port anti-affinity
+      - 9091:8080
+      - 10000
+      - 10001
+      - 10002
+      - 10003
+      - 10004
+
+    environment:
+      NIFI_UI_BANNER_TEXT: 'Acquisition Node'
+      NIFI_INSTANCE_ROLE: 'edge'
+
+  ncm:
+    image: aperepel/nifi
+    # build: ../docker/
+    ports:
+      - 9091:8080
+    environment:
+      NIFI_UI_BANNER_TEXT: 'Processing Cluster'
+      NIFI_INSTANCE_ROLE: 'cluster-manager'
+
+  worker:
+    image: aperepel/nifi
+    # build: ../docker/
+    environment:
+      NIFI_UI_BANNER_TEXT: 'Processing Node'
+      NIFI_INSTANCE_ROLE: 'cluster-node'
+    ports:
+      - 10000
+      - 10001
+      - 10002
+      - 10003
+      - 10004
